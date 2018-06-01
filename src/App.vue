@@ -24,7 +24,7 @@ export default {
 }
 html,
 body {
-  font-size: 16px;
+  font-size: 14px;
   width: 100%;
   height: 100%;
 }
