@@ -15,21 +15,21 @@
         <input type="text" placeholder="选择日期">
       </div>
     </label> -->
-    <label for="date">
-      选择日期：
-      <div id="date" class="date-picker">
-        <input type="text" :value="getCurrentDate" placeholder="选择日期">
+      <div id="date" class="date-picker" @click.stop="showDatePicker">
+        <label for="date">
+        选择日期：
+          <input type="text" :value="getCurrentDate" placeholder="选择日期">
+        </label>
       </div>
-    </label>
-    <div class="time-box">
+    <div class="time-box" :class="{'show-date-picker': datePickerVisible}">
       <div class="time-box-head">
         <div class="time-title">
-          <button @click="prevYear">《</button>
-          <button @click="prevMonth">&lt;</button>
-          <span class="year-title">{{year}}年</span>
-          <span class="month-title">{{month}}月</span>
-          <button @click="nextMonth">&gt;</button>
-          <button @click="nextYear">》</button>
+          <span @click="prevYear" class="prev-year btn">&lt;&lt;</span>
+          <span @click="prevMonth" class="prev-month btn">&lt;</span>
+          <span class="year-title click-pick" @click="pickYear">{{year}}年</span>
+          <span class="month-title click-pick" @click="pickMonth">{{month}}月</span>
+          <span @click="nextYear" class="next-year btn">&gt;&gt;</span>
+          <span @click="nextMonth" class="next-month btn">&gt;</span>
         </div>
       </div>
       <div class="time-box-body">
@@ -59,11 +59,15 @@ export default {
       date: 0,
       month: 0,
       year: 0,
-      weekArr: []
+      weekArr: [],
+      datePickerVisible: false,
     }
   },
   methods: {
     pickYear() {
+
+    },
+    pickMonth() {
 
     },
     getDaysAMonth(year, month) {
@@ -137,6 +141,9 @@ export default {
     changeDate(day) {
       this.month = day.month + 1;
       this.date = day.date;
+    },
+    showDatePicker() {
+      this.datePickerVisible = true;
     }
   },
   computed: {
@@ -157,6 +164,9 @@ export default {
     this.month = month + 1;
     this.date = date;
     this.weekArr = this.genDateArr(year, month);
+    document.body.addEventListener('click', function() {
+      console.log('click body')
+    })
   },
   watch: {
     year(newVal, oldVal) {
@@ -166,6 +176,9 @@ export default {
     month(newVal, oldVal) {
       if(newVal == oldVal) return;
       this.weekArr = this.genDateArr(this.year, this.month - 1);
+    },
+    datePickerVisible(newVal, oldVal) {
+
     }
   }
 }
@@ -186,6 +199,9 @@ td {
   text-align: center;
   line-height: 24px;
 }
+.time-box-body table td:hover span {
+  color: royalblue;
+}
 .date-cell.curr-month.active {
   background-color: bisque;
   color: #fff;
@@ -193,5 +209,57 @@ td {
 }
 .date-cell.curr-month {
   color: #424242;
+}
+.click-pick {
+  font-size: 16px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.click-pick:hover {
+  color: royalblue;
+}
+.time-box {
+  border-radius: 3px;
+  border: 1px solid #424242;
+  width: 38vw;
+  min-width: 300px;
+  max-height: 0;
+  transition: max-height .3s ease-in;
+  visibility: hidden;
+  overflow: hidden;
+  user-select: none;
+}
+.time-box.show-date-picker {
+  /* height: auto; */
+  max-height: 500px;
+  visibility: visible;
+}
+.time-box-body {
+  margin: 0 12px;
+}
+.time-box-body table {
+  /* margin: 0 auto; */
+}
+.time-box-head {
+  margin: 15px 12px;
+}
+.time-title {
+  text-align: center;
+}
+.time-title span {
+  display: inline-block;
+}
+.time-title .btn {
+  padding: 0 5px;
+  cursor: pointer;
+  position: relative;
+}
+.time-title .prev-year,
+.time-title .prev-month {
+  float: left;
+}
+.time-title .next-month,
+.time-title .next-year {
+  float: right;
 }
 </style>

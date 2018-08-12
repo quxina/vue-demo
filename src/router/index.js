@@ -7,6 +7,7 @@ import Load from '@/components/Load'
 import TestAlert from '@/components/TestAlert'
 import LoginPage from '@/components/login/LoginPage'
 import MyTimePicker from '@/components/baseComponents/MyTimePicker'
+import BMapDemo from '@/components/BMapDemo'
 
 
 Vue.use(Router)
@@ -48,6 +49,10 @@ export default new Router({
       path: '/timepicker',
       name: 'MyTimePicker',
       component: MyTimePicker
+    },
+    {
+      path: '/bmapdemo',
+      component: BMapDemo
     }
   ]
 })
