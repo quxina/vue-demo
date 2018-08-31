@@ -1,15 +1,23 @@
 <template>
   <div class="map-main">
     <div class="type-bar"></div>
-    <baidu-map :center="center" :zoom="12" @ready="init" class="map-wrap" ak="wtb30HwfcKhNlr0kAVH3ZmbsNhjUXv6b">
+    <baidu-map :center="center" :zoom="12" @ready="init" :scroll-wheel-zoom="true" class="map-wrap" ak="wtb30HwfcKhNlr0kAVH3ZmbsNhjUXv6b">
       <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="false"></bm-geolocation>
+      <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-navigation>
       <bm-marker :position="center" :dragging="true" animation="BMAP_ANIMATION_BOUNCE"></bm-marker>
       <bml-marker-clusterer>
         <bm-marker v-for="(point, index) in markers" @click="clickPoint" :key="index" :position="{lng: point.lng, lat: point.lat}"></bm-marker>
       </bml-marker-clusterer>
-      <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-navigation>
-      <bm-info-window :show="true" :position="center">
-        <local-info></local-info>
+      <bm-info-window :show="infoWindow.showInfo" :position="infoWindow.checkedPoint" @clickclose="clickInfoWinBtn" :autoPan="true">
+        <div class="info-wrap">
+          <div class="info-title">
+            金融街购物广场
+            <span class="mes-num">{{10}}条消息</span>
+          </div>
+          <div class="info-content">
+            商圈详情:{{infoWindow.checkedPoint.lng}}
+          </div>
+        </div>
       </bm-info-window>
     </baidu-map>
   </div>
@@ -27,10 +35,14 @@ export default {
       },
       initLocation: false,
       markers: [],
-      checkedPoint: {
-        lng: 0,
-        lat: 0
-      }
+      infoWindow: {
+        checkedPoint: {
+          lng: 0,
+          lat: 0
+        },
+        showInfo: false
+      },
+      
     }
   },
   components: {
@@ -58,7 +70,6 @@ export default {
           const pointArr = [r.point]
           _this.center.lng = r.point.lng
           _this.center.lat = r.point.lat
-          convertor.translate(pointArr, 1, 5, _this.translateCb.bind(_this))
         }
         else {
 
@@ -71,16 +82,13 @@ export default {
         this.markers.push(position)
       }
     },
-    translateCb(data) {
-      console.log('converte finish', data)
-      if(data.status === 0) {
-        console.log('finish', data.points[0])
-        this.center.lng = data.points[0].lng
-        this.center.lat = data.points[0].lat
-      }
-    },
     clickPoint(e) {
-      console.log(e)
+      console.log('click point', e.target.point)
+      this.infoWindow.showInfo = true
+      this.infoWindow.checkedPoint = Object.assign(this.infoWindow.checkedPoint, e.target.point)
+    },
+    clickInfoWinBtn() {
+      this.infoWindow.showInfo = false
     }
   }
 }

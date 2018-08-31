@@ -8,6 +8,7 @@ import TestAlert from '@/components/TestAlert'
 import LoginPage from '@/components/login/LoginPage'
 import MyTimePicker from '@/components/baseComponents/MyTimePicker'
 import BMapDemo from '@/components/BMapDemo'
+import MobileScroll from '@/components/MobileScroll'
 
 
 Vue.use(Router)
@@ -53,6 +54,10 @@ export default new Router({
     {
       path: '/bmapdemo',
       component: BMapDemo
+    },
+    {
+      path: '/mscroll',
+      component: MobileScroll
     }
   ]
 })
